@@ -36,11 +36,11 @@ function PageHome() {
             PRODUCTS[6],
           ]}
         />
-
+        {/* 
         <div className="py-24 lg:py-32 border-t border-b border-slate-200 dark:border-slate-700">
           <SectionHowItWork />
-        </div>
-        <SectionPromo1 />
+        </div> */}
+        {/* <SectionPromo1 /> */}
 
         <div className="relative py-24 lg:py-32">
           <BackgroundSection />
@@ -52,20 +52,20 @@ function PageHome() {
           subHeading="Best selling of the month"
         />
 
-        <SectionPromo2 />
+        {/* <SectionPromo2 /> */}
 
         <SectionSliderLargeProduct cardStyle="style2" />
 
         <SectionSliderCategories />
 
-        <SectionPromo3 />
+        {/* <SectionPromo3 /> */}
 
         <SectionGridFeatureItems />
 
-        <div className="relative py-24 lg:py-32">
+        {/* <div className="relative py-24 lg:py-32">
           <BackgroundSection />
           <div>
-            <Heading rightDescText="From the Ciseco blog">
+            <Heading rightDescText="From the Shopcek blog">
               The latest news
             </Heading>
             <SectionMagazine5 />
@@ -73,8 +73,8 @@ function PageHome() {
               <ButtonSecondary>Show all blog articles</ButtonSecondary>
             </div>
           </div>
-        </div>
-        <SectionClientSay />
+        </div> */}
+        {/* <SectionClientSay /> */}
       </div>
     </div>
   );
