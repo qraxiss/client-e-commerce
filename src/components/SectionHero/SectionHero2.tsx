@@ -1,5 +1,33 @@
 "use client";
 
+import { useQuery, gql } from "@apollo/client";
+import { simplifyResponse } from "@/lib/simplify-response";
+import config from "@/config/config";
+
+const query = gql`
+  query {
+    campaign {
+      data {
+        attributes {
+          campaigns {
+            image {
+              data {
+                attributes {
+                  url
+                }
+              }
+            }
+            heading
+            subHeading
+            btnText
+            btnLink
+          }
+        }
+      }
+    }
+  }
+`;
+
 import React, { FC, useState } from "react";
 import backgroundLineSvg from "@/images/Moon.svg";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
@@ -8,7 +36,6 @@ import Prev from "@/shared/NextPrev/Prev";
 import useInterval from "react-use/lib/useInterval";
 import useBoolean from "react-use/lib/useBoolean";
 import Image from "next/image";
-import { HERO2_DEMO_DATA as DATA } from "./data";
 
 export interface SectionHero2Props {
   className?: string;
@@ -21,6 +48,18 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
   const [indexActive, setIndexActive] = useState(0);
   const [isRunning, toggleIsRunning] = useBoolean(true);
 
+  let { data, loading, error } = useQuery(query);
+
+  if (!loading) {
+    data = simplifyResponse(data);
+    data = data.campaigns.map((campaign: any) => {
+      return {
+        ...campaign,
+        image: config.serverUrl + campaign.image.url,
+      };
+    });
+  }
+
   useInterval(
     () => {
       handleAutoNext();
@@ -31,7 +70,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
 
   const handleAutoNext = () => {
     setIndexActive((state) => {
-      if (state >= DATA.length - 1) {
+      if (state >= data.length - 1) {
         return 0;
       }
       return state + 1;
@@ -40,7 +79,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
 
   const handleClickNext = () => {
     setIndexActive((state) => {
-      if (state >= DATA.length - 1) {
+      if (state >= data.length - 1) {
         return 0;
       }
       return state + 1;
@@ -51,7 +90,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
   const handleClickPrev = () => {
     setIndexActive((state) => {
       if (state === 0) {
-        return DATA.length - 1;
+        return data.length - 1;
       }
       return state - 1;
     });
@@ -71,7 +110,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
 
   const renderItem = (index: number) => {
     const isActive = indexActive === index;
-    const item = DATA[index];
+    const item = data[index];
     if (!isActive) {
       return null;
     }
@@ -81,7 +120,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
         key={index}
       >
         <div className="absolute bottom-4 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 z-20 flex justify-center">
-          {DATA.map((_, index) => {
+          {data.map((_: any, index: any) => {
             const isActive = indexActive === index;
             return (
               <div
@@ -186,7 +225,9 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
     );
   };
 
-  return <>{DATA.map((_, index) => renderItem(index))}</>;
+  return (
+    <>{(!loading ? data : []).map((_: any, index: any) => renderItem(index))}</>
+  );
 };
 
 export default SectionHero2;
