@@ -16,7 +16,7 @@ const SectionPromo1: FC<SectionPromo1Props> = ({ className = "" }) => {
       className={`nc-SectionPromo1 relative flex flex-col lg:flex-row items-center ${className}`}
     >
       <div className="relative flex-shrink-0 mb-16 lg:mb-0 lg:mr-10 lg:w-2/5">
-        <Logo className="w-28" />
+        <Logo className="w-30" />
         <h2 className="font-semibold text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl mt-6 sm:mt-10 !leading-[1.2] tracking-tight">
           Earn free money <br /> with Ciseco
         </h2>

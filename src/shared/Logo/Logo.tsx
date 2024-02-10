@@ -1,6 +1,35 @@
-import React from "react";
-import logoImg from "@/images/logo.svg";
-import logoLightImg from "@/images/logo-light.svg";
+"use client";
+import { useQuery, gql } from "@apollo/client";
+import { simplifyResponse } from "@/lib/simplify-response";
+import config from "@/config/config";
+
+const query = gql`
+  query {
+    logo {
+      data {
+        attributes {
+          icon {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+
+          text {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+import React, { use } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -11,10 +40,15 @@ export interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({
-  img = logoImg,
-  imgLight = logoLightImg,
   className = "flex-shrink-0",
+  imgLight = "",
 }) => {
+  let { data, loading, error } = useQuery(query);
+
+  if (!loading) {
+    data = simplifyResponse(data);
+  }
+
   return (
     <Link
       href="/"
@@ -22,18 +56,20 @@ const Logo: React.FC<LogoProps> = ({
     >
       {/* THIS USE FOR MY CLIENT */}
       {/* PLEASE UN COMMENT BELLOW CODE AND USE IT */}
-      {img ? (
+      {!loading ? (
         <Image
           className={`block h-8 sm:h-10 w-auto ${
             imgLight ? "dark:hidden" : ""
           }`}
-          src={img}
+          src={config.serverUrl + data.text.url}
           alt="Logo"
+          width={200}
+          height={300}
           sizes="200px"
           priority
         />
       ) : (
-        "Logo Here"
+        ""
       )}
       {imgLight && (
         <Image

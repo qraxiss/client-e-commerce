@@ -2,11 +2,20 @@ export function simplifyResponse<T extends ObjectType>(
   response: T
 ): SimpleResponse<T> {
   const entries = Object.entries(response).filter(([k]) => k !== "__typename");
-  if (entries.length >= 2)
-    throw new Error(
-      "Cannot simplify a Strapi response that contains an object with more than one key"
-    );
-  return simplify(entries[0][1] as any);
+
+  if (entries.length === 1) {
+    return simplify(entries[0][1] as any);
+  } else if (entries.length > 1) {
+    const simplifiedResponse: SimpleResponse<T> = {} as SimpleResponse<T>;
+
+    for (const [key, value] of entries) {
+      simplifiedResponse[key] = simplify(value as any);
+    }
+
+    return simplifiedResponse;
+  } else {
+    throw new Error("Cannot simplify an empty Strapi response");
+  }
 }
 
 export function simplify<T extends ValidType>(value: T): SimpleType<T>;

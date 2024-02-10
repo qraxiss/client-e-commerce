@@ -1,3 +1,7 @@
+"use client";
+
+import config from "@/config/config";
+
 import rightImg from "@/images/hero-right1.png";
 import React, { FC } from "react";
 import SectionFounder from "./SectionFounder";
@@ -8,29 +12,81 @@ import SectionHero from "./SectionHero";
 import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 import SectionPromo3 from "@/components/SectionPromo3";
 
+import { useQuery, gql } from "@apollo/client";
+import { simplifyResponse } from "@/lib/simplify-response";
+
+const query = gql`
+  query {
+    people {
+      data {
+        attributes {
+          people {
+            name
+            job
+            avatar {
+              data {
+                attributes {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    about {
+      data {
+        attributes {
+          text
+          rightImg {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 const PageAbout = ({}) => {
+  let { data, loading, error } = useQuery(query);
+  if (!loading) {
+    data = simplifyResponse(data);
+    console.log(data);
+  }
+
   return (
     <div className={`nc-PageAbout overflow-hidden relative`}>
       {/* ======== BG GLASS ======== */}
       <BgGlassmorphism />
 
       <div className="container py-16 lg:py-28 space-y-16 lg:space-y-28">
-        <SectionHero
-          rightImg={rightImg}
-          heading="👋 About Us."
-          btnText=""
-          subHeading="We’re impartial and independent, and every day we create distinctive, world-class programmes and content which inform, educate and entertain millions of people in the around the world."
-        />
+        {!loading ? (
+          <SectionHero
+            rightImg={
+              !loading ? config.serverUrl + data.about.rightImg.url : ""
+            }
+            heading="👋 About Us."
+            btnText=""
+            subHeading={!loading ? data.about.text : ""}
+          />
+        ) : (
+          <></>
+        )}
 
-        <SectionFounder />
-        <div className="relative py-16">
+        <SectionFounder people={!loading ? data.people.people : []} />
+        {/* <div className="relative py-16">
           <BackgroundSection />
           <SectionClientSay />
         </div>
 
         <SectionStatistic />
 
-        <SectionPromo3 />
+        <SectionPromo3 /> */}
       </div>
     </div>
   );

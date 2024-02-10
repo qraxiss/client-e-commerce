@@ -7,6 +7,10 @@ import Textarea from "@/shared/Textarea/Textarea";
 import { avatarImgs } from "@/contains/fakeData";
 import Image from "next/image";
 
+import { useQuery, gql } from "@apollo/client";
+
+const query = gql``;
+
 const AccountPage = () => {
   return (
     <div className={`nc-AccountPage `}>
