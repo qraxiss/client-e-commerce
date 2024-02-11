@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC } from "react";
 import SocialsList from "@/shared/SocialsList/SocialsList";
 import Label from "@/components/Label/Label";
@@ -6,6 +8,24 @@ import Textarea from "@/shared/Textarea/Textarea";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
 import SectionPromo1 from "@/components/SectionPromo1";
+
+import { gql, useQuery, useMutation } from "@apollo/client";
+import { simplifyResponse } from "@/lib/simplify-response";
+
+const query = gql``;
+const mutation = gql`
+  mutation CONTACT($email: String!, $name: String!, $message: String!) {
+    createMessage(data: { email: $email, name: $name, message: $message }) {
+      data {
+        attributes {
+          email
+          message
+          name
+        }
+      }
+    }
+  }
+`;
 
 const info = [
   {

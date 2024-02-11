@@ -1,3 +1,8 @@
+"use client";
+import config from "@/config/config";
+import { useQuery, gql } from "@apollo/client";
+import { simplifyResponse } from "@/lib/simplify-response";
+
 import React, { FC } from "react";
 import facebook from "@/images/socials/facebook.svg";
 import twitter from "@/images/socials/twitter.svg";
